@@ -1,17 +1,22 @@
-import React, { useState } from "react";
-import { View, TextInput, StyleSheet, Image, Text } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { View, TextInput, StyleSheet, Image, Text } from "react-native";
 
 import { AppButton } from "../components/ui/AppButton";
 import { AppButtonLoaderText } from "../components/ui/AppButtonLoaderText";
+
+import { auth } from "../redux/actions/mainAction";
 
 import { THEME } from "../theme";
 import { logoPath } from "../path";
 
 export const AuthScreen = () => {
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [loading, setLoading] = useState(false);
+    const [email, setEmail] = useState("123456@gmail.com");
+    const [password, setPassword] = useState("qwerty");
+
+    const loading: boolean = useSelector((state) => state.main.loading);
+    const dispatch = useDispatch();
 
     const navigation = useNavigation();
 
@@ -24,8 +29,8 @@ export const AuthScreen = () => {
     const inputView = () => (
         <View style={styles.inputWrapper}>
             <TextInput
-                value={username}
-                onChangeText={setUsername}
+                value={email}
+                onChangeText={setEmail}
                 style={styles.input}
                 placeholder="Имя пользователя"
                 maxLength={32}
@@ -40,9 +45,17 @@ export const AuthScreen = () => {
         </View>
     );
 
+    const onPressHandler = () => {
+        if (!!email && !!password) {
+            auth(email, password, dispatch);
+        } else {
+            // TODO: showToast
+        }
+    };
+
     const buttonView = () => (
         <View style={styles.buttonWrapper}>
-            <AppButton disabled={loading} onPress={() => navigation.navigate("Main")}>
+            <AppButton disabled={loading} onPress={onPressHandler}>
                 <AppButtonLoaderText loading={loading} text="Вход" />
             </AppButton>
             <AppButton

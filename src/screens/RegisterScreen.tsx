@@ -1,9 +1,11 @@
-import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { View, TextInput, StyleSheet } from "react-native";
 
 import { AppButton } from "../components/ui/AppButton";
 import { AppButtonLoaderText } from "../components/ui/AppButtonLoaderText";
+
+import { register } from "../redux/actions/mainAction";
 
 import { THEME } from "../theme";
 
@@ -12,9 +14,9 @@ export const ReqisterScreen = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirm, setConfirm] = useState("");
-    const [loading, setLoading] = useState(true);
 
-    const navigation = useNavigation();
+    const loading: boolean = useSelector((state) => state.main.loading);
+    const dispatch = useDispatch();
 
     const inputView = () => (
         <View style={styles.wrapper}>
@@ -43,9 +45,29 @@ export const ReqisterScreen = () => {
         </View>
     );
 
+    const validateEmail = (): boolean => {
+        return true;
+    };
+
+    const onPressHandler = () => {
+        if (!!username && !!email && !!password && !!confirm) {
+            if (!validateEmail()) {
+                // TODO: showToast
+            }
+
+            if (password.trim() !== confirm.trim()) {
+                // TODO: showToast
+            }
+
+            register(username, email, password, dispatch);
+        } else {
+            // TODO: showToast
+        }
+    };
+
     const buttonView = () => (
         <View style={styles.wrapper}>
-            <AppButton onPress={() => console.log("")}>
+            <AppButton disabled={loading} onPress={onPressHandler}>
                 <AppButtonLoaderText loading={loading} text="Регистрация" />
             </AppButton>
         </View>

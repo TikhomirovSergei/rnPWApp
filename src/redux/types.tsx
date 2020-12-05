@@ -1,0 +1,11 @@
+export const AUTH = "AUTH";
+export const AUTH_SUCCESS = "AUTH_SUCCESS";
+export const AUTH_FAILURE = "AUTH_FAILURE";
+
+export const REGISTER = "REGISTER";
+export const REGISTER_SUCCESS = "REGISTER_SUCCESS";
+export const REGISTER_FAILURE = "REGISTER_FAILURE";
+
+export const GET_USER_INFO = "GET_USER_INFO";
+export const GET_USER_INFO_SUCCESS = "GET_USER_INFO_SUCCESS";
+export const GET_USER_INFO_FAILURE = "GET_USER_INFO_FAILURE";

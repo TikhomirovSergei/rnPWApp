@@ -1,31 +1,43 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { View, Text, TextInput, StyleSheet, Image } from "react-native";
 
 import { AppButton } from "../components/ui/AppButton";
 import { AppButtonLoaderText } from "../components/ui/AppButtonLoaderText";
-import { nextPath, personPath } from "../path";
+import { AppLoader } from "../components/ui/AppLoader";
+
+import { getUserInfo } from "../redux/actions/userAction";
+import { IUserInfo } from "../redux/reducers/userReducer";
 
 import { THEME } from "../theme";
+import { nextPath, personPath } from "../path";
 
 export const MainScreen = () => {
-    const [username, _] = useState("myLogin");
-    const [userBalance, setUserBalance] = useState(500);
-    const [user, setUser] = useState("");
+    const [recipient, setRecipient] = useState("");
     const [balance, setBalance] = useState(0);
-    const [loading, setLoading] = useState(false);
+
+    const user: IUserInfo = useSelector((state) => state.user.user);
+    const userLoading: boolean = useSelector((state) => state.user.loading);
+    const token: string = useSelector((state) => state.main.token);
+    const loading: boolean = useSelector((state) => state.main.loading);
+    const dispatch = useDispatch();
 
     const navigation = useNavigation();
+
+    useEffect(() => {
+        getUserInfo(token, dispatch);
+    }, []);
 
     const userInfoView = () => (
         <View style={styles.userInfoWrapper}>
             <Image style={styles.image} source={personPath} />
             <View style={styles.userInfoTextWrapper}>
                 <Text style={styles.text}>Добро пожаловать</Text>
-                <Text style={styles.loginText}>{username}</Text>
+                <Text style={styles.loginText}>{user.name}</Text>
                 <Text style={styles.text}>
                     {`Ваш баланс: `}
-                    <Text style={styles.balanceText}>{`${userBalance} PW`}</Text>
+                    <Text style={styles.balanceText}>{`${user.balance} PW`}</Text>
                 </Text>
             </View>
         </View>
@@ -44,27 +56,33 @@ export const MainScreen = () => {
 
     return (
         <View style={styles.container}>
-            {userInfoView()}
-            <View style={styles.wrapper}>
-                <AppButton
-                    onPress={() => navigation.navigate("UserList")}
-                    externalStyles={styles.recipientExternalBtnView}
-                    internalStyles={styles.recipientInternalBtnView}>
-                    <View style={styles.recipientView}>
-                        <Text>{user.length ? user : "Получатель не выбран"}</Text>
-                        <Image style={styles.recipientViewImage} source={nextPath} />
+            {userLoading ? (
+                <AppLoader />
+            ) : (
+                <>
+                    {userInfoView()}
+                    <View style={styles.wrapper}>
+                        <AppButton
+                            onPress={() => navigation.navigate("UserList")}
+                            externalStyles={styles.recipientExternalBtnView}
+                            internalStyles={styles.recipientInternalBtnView}>
+                            <View style={styles.recipientView}>
+                                <Text>{recipient.length ? recipient : "Получатель не выбран"}</Text>
+                                <Image style={styles.recipientViewImage} source={nextPath} />
+                            </View>
+                        </AppButton>
+                        <TextInput
+                            value={String(balance)}
+                            onChangeText={(value) => setBalance(parseInt(value))}
+                            style={styles.input}
+                            keyboardType="numeric"
+                            placeholder="Сумма транзакции"
+                            maxLength={32}
+                        />
                     </View>
-                </AppButton>
-                <TextInput
-                    value={String(balance)}
-                    onChangeText={(value) => setBalance(parseInt(value))}
-                    style={styles.input}
-                    keyboardType="numeric"
-                    placeholder="Сумма транзакции"
-                    maxLength={32}
-                />
-            </View>
-            {buttonView()}
+                    {buttonView()}
+                </>
+            )}
         </View>
     );
 };
