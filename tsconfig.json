@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "experimentalDecorators": true,
+        "jsx": "react",
+        "module": "commonjs",
+        "noImplicitAny": false,
+        "sourceMap": false,
+        "rootDir": "src",
+        "outDir": "build",
+        "target": "es2017",
+        "skipLibCheck": true
+    },
+    "exclude": ["node_modules"]
+}
