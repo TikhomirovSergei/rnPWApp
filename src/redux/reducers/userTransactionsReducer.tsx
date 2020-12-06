@@ -1,30 +1,29 @@
 import { AnyAction } from "redux";
-import { GET_USER_TRANSACTIONS, GET_USER_TRANSACTIONS_FAILURE, GET_USER_TRANSACTIONS_SUCCESS } from "../types";
+import {
+    CLEAR_GET_USER_TRANSACTIONS_ERROR_MESSAGE,
+    GET_USER_TRANSACTIONS,
+    GET_USER_TRANSACTIONS_FAILURE,
+    GET_USER_TRANSACTIONS_SUCCESS,
+} from "../types";
 
 export interface IUserTransactions {
     id: number;
-    date: number;
+    date: string;
     username: string;
     amount: number;
     balance: number;
 }
 
 interface IState {
-    users: IUserTransactions[];
+    history: IUserTransactions[];
     loading: boolean;
+    error: string;
 }
 
 const initialState: IState = {
-    users: [
-        {
-            id: 200,
-            date: 123456,
-            username: "username",
-            amount: 200,
-            balance: 700,
-        },
-    ],
+    history: [],
     loading: false,
+    error: "",
 };
 
 export function userTransactions(state = initialState, action: AnyAction) {
@@ -38,12 +37,18 @@ export function userTransactions(state = initialState, action: AnyAction) {
             return {
                 ...state,
                 loading: false,
-                // users: action.payload,
+                history: action.payload,
             };
         case GET_USER_TRANSACTIONS_FAILURE:
             return {
                 ...state,
                 loading: false,
+                error: action.payload,
+            };
+        case CLEAR_GET_USER_TRANSACTIONS_ERROR_MESSAGE:
+            return {
+                ...state,
+                error: "",
             };
         default:
             return state;

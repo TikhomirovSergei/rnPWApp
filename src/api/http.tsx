@@ -30,7 +30,7 @@ export class Http {
         }
     }
 
-    static async getUsers(token: string) {
+    static async getHistory(token: string) {
         try {
             const headers = {
                 ...Http.headers,
@@ -49,6 +49,18 @@ export class Http {
                 ...{ Authorization: `Bearer ${token}` },
             };
             return await request(`${Http.baseUrl}/api/protected/transactions`, "POST", headers, { name, amount });
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    static async getUsers(token: string) {
+        try {
+            const headers = {
+                ...Http.headers,
+                ...{ Authorization: `Bearer ${token}` },
+            };
+            return await request(`${Http.baseUrl}/api/protected/users/list`, "POST", headers, {});
         } catch (e) {
             throw e;
         }

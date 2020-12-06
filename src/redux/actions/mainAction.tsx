@@ -9,6 +9,7 @@ import {
     REGISTER_FAILURE,
     REGISTER_SUCCESS,
     SET_ERROR_MESSAGE,
+    SET_REG_ERROR_MESSAGE,
 } from "../types";
 
 export async function auth(email: string, password: string, dispatch: Dispatch) {
@@ -37,4 +38,8 @@ export function clearErrorMessage(dispatch: Dispatch) {
 
 export function setErrorMessage(message: string, dispatch: Dispatch) {
     dispatch({ type: SET_ERROR_MESSAGE, payload: message });
+}
+
+export function seRegErrorMessage(message: string, dispatch: Dispatch) {
+    dispatch({ type: SET_REG_ERROR_MESSAGE, payload: message });
 }

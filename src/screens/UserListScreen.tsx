@@ -1,48 +1,67 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { View, StyleSheet, FlatList, Image } from "react-native";
 import { List } from "react-native-paper";
 
-import { getUserTransactions } from "../redux/actions/userTransactionsAction";
-import { IUserTransactions } from "../redux/reducers/userTransactionsReducer";
+import { AppLoader } from "../components/ui/AppLoader";
+import { AppSnackbar } from "../components/ui/AppSnackbar";
+
+import { clearGetUserListErrorMessage, getUsers } from "../redux/actions/userListAction";
+import { IUserListState } from "../redux/reducers/userListReducer";
 
 import { THEME } from "../theme";
 import { personPath } from "../path";
 
 export const UserListScreen = ({ route, navigation }) => {
-    const users: IUserTransactions = useSelector((state) => state.userTransactions.users);
+    const [visible, setVisible] = useState(false);
+
+    const loading: boolean = useSelector((state) => state.userList.loading);
+    const users: IUserListState = useSelector((state) => state.userList.users);
+    const error: string = useSelector((state) => state.userList.error);
     const token: string = useSelector((state) => state.main.token);
     const dispatch = useDispatch();
 
     const { setRecipient } = route.params;
 
     useEffect(() => {
-        getUserTransactions(token, dispatch);
+        setVisible(!!error.length);
+    }, [error]);
+
+    useEffect(() => {
+        getUsers(token, dispatch);
     }, []);
 
-    const onPresshandler = (username) => {
-        setRecipient(username);
+    const onPresshandler = (name) => {
+        setRecipient(name);
         navigation.goBack();
+    };
+
+    const onDismissSnackBar = () => {
+        clearGetUserListErrorMessage(dispatch);
+        setVisible(false);
     };
 
     return (
         <View style={styles.container}>
-            <FlatList
-                data={users}
-                renderItem={({ item }) => (
-                    <List.Item
-                        style={styles.item}
-                        title={item.username}
-                        titleStyle={styles.title}
-                        titleEllipsizeMode={"middle"}
-                        description={`Баланс: ${item.balance}`}
-                        descriptionNumberOfLine={1}
-                        left={() => <Image style={styles.image} source={personPath} />}
-                        onPress={() => onPresshandler(item.username)}
-                    />
-                )}
-                keyExtractor={(item) => String(item.id)}
-            />
+            {loading ? (
+                <AppLoader />
+            ) : (
+                <FlatList
+                    data={users.users}
+                    renderItem={({ item }) => (
+                        <List.Item
+                            style={styles.item}
+                            title={item.name}
+                            titleStyle={styles.title}
+                            titleEllipsizeMode={"middle"}
+                            left={() => <Image style={styles.image} source={personPath} />}
+                            onPress={() => onPresshandler(item.name)}
+                        />
+                    )}
+                    keyExtractor={(item) => String(item.id)}
+                />
+            )}
+            <AppSnackbar visible={visible} message={error} dismiss={onDismissSnackBar} />
         </View>
     );
 };

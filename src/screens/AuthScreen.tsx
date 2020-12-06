@@ -18,7 +18,7 @@ export const AuthScreen = () => {
     const [visible, setVisible] = useState(false);
 
     const loading: boolean = useSelector((state) => state.main.loading);
-    const error: string = useSelector((state) => state.main.error);
+    const error: string = useSelector((state) => state.main.authError);
     const dispatch = useDispatch();
 
     const navigation = useNavigation();

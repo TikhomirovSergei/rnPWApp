@@ -6,7 +6,7 @@ import { AppButton } from "../components/ui/AppButton";
 import { AppButtonLoaderText } from "../components/ui/AppButtonLoaderText";
 import { AppSnackbar } from "../components/ui/AppSnackbar";
 
-import { clearErrorMessage, register, setErrorMessage } from "../redux/actions/mainAction";
+import { clearErrorMessage, register, seRegErrorMessage } from "../redux/actions/mainAction";
 
 import { THEME } from "../theme";
 
@@ -18,7 +18,7 @@ export const ReqisterScreen = ({}) => {
     const [visible, setVisible] = useState(false);
 
     const loading: boolean = useSelector((state) => state.main.loading);
-    const error: string = useSelector((state) => state.main.error);
+    const error: string = useSelector((state) => state.main.regError);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -60,18 +60,18 @@ export const ReqisterScreen = ({}) => {
     const onPressHandler = () => {
         if (!!username && !!email && !!password && !!confirm) {
             if (!validateEmail()) {
-                setErrorMessage("Некорректный email", dispatch);
+                seRegErrorMessage("Некорректный email", dispatch);
                 return;
             }
 
             if (password.trim() !== confirm.trim()) {
-                setErrorMessage("Пароли не совпадают", dispatch);
+                seRegErrorMessage("Пароли не совпадают", dispatch);
                 return;
             }
 
             register(username, email, password, dispatch);
         } else {
-            setErrorMessage("Все поля обязательны для заполнения", dispatch);
+            seRegErrorMessage("Все поля обязательны для заполнения", dispatch);
         }
     };
 
