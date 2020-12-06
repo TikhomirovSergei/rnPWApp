@@ -22,6 +22,7 @@ const NavStack = () => {
                 ...TransitionPresets.SlideFromRightIOS,
                 headerStyleInterpolator: HeaderStyleInterpolators.forUIKit,
                 gestureEnabled: true,
+                headerBackTitleVisible: false,
             }}>
             <Stack.Screen name="Main" component={MainScreen} options={{ title: "Главная" }} />
             <Stack.Screen name="UserList" component={UserListScreen} options={{ title: "Получатели" }} />
@@ -35,6 +36,7 @@ const NavStack = () => {
                 ...TransitionPresets.SlideFromRightIOS,
                 headerStyleInterpolator: HeaderStyleInterpolators.forUIKit,
                 gestureEnabled: true,
+                headerBackTitleVisible: false,
             }}>
             <Stack.Screen name="Auth" component={AuthScreen} options={{ headerShown: false, title: "Авторизация" }} />
             <Stack.Screen name="Register" component={ReqisterScreen} options={{ title: "Регистрация" }} />

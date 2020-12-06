@@ -5,6 +5,7 @@ import { View, Text, TextInput, StyleSheet, Image } from "react-native";
 import { AppButton } from "../components/ui/AppButton";
 import { AppButtonLoaderText } from "../components/ui/AppButtonLoaderText";
 import { AppLoader } from "../components/ui/AppLoader";
+import { AppSnackbar } from "../components/ui/AppSnackbar";
 
 import {
     clearUserErrorMessage,
@@ -16,7 +17,6 @@ import { IUserInfo } from "../redux/reducers/userReducer";
 
 import { THEME } from "../theme";
 import { nextPath, personPath } from "../path";
-import { AppSnackbar } from "../components/ui/AppSnackbar";
 
 export const MainScreen = ({ navigation }) => {
     const [recipient, setRecipient] = useState("");

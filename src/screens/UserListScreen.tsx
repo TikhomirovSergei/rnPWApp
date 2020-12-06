@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { View, StyleSheet, FlatList, Image } from "react-native";
+import { View, StyleSheet, FlatList, Image, RefreshControl } from "react-native";
 import { List } from "react-native-paper";
 
-import { AppLoader } from "../components/ui/AppLoader";
 import { AppSnackbar } from "../components/ui/AppSnackbar";
 
 import { clearGetUserListErrorMessage, getUsers } from "../redux/actions/userListAction";
@@ -14,8 +13,8 @@ import { personPath } from "../path";
 
 export const UserListScreen = ({ route, navigation }) => {
     const [visible, setVisible] = useState(false);
+    const [refreshing, setRefreshing] = useState(false);
 
-    const loading: boolean = useSelector((state) => state.userList.loading);
     const users: IUserListState = useSelector((state) => state.userList.users);
     const error: string = useSelector((state) => state.userList.error);
     const token: string = useSelector((state) => state.main.token);
@@ -28,7 +27,12 @@ export const UserListScreen = ({ route, navigation }) => {
     }, [error]);
 
     useEffect(() => {
-        getUsers(token, dispatch);
+        onRefresh();
+    }, []);
+
+    const onRefresh = useCallback(() => {
+        setRefreshing(true);
+        getUsers(token, dispatch, () => setRefreshing(false));
     }, []);
 
     const onPresshandler = (name) => {
@@ -43,24 +47,23 @@ export const UserListScreen = ({ route, navigation }) => {
 
     return (
         <View style={styles.container}>
-            {loading ? (
-                <AppLoader />
-            ) : (
-                <FlatList
-                    data={users.users}
-                    renderItem={({ item }) => (
-                        <List.Item
-                            style={styles.item}
-                            title={item.name}
-                            titleStyle={styles.title}
-                            titleEllipsizeMode={"middle"}
-                            left={() => <Image style={styles.image} source={personPath} />}
-                            onPress={() => onPresshandler(item.name)}
-                        />
-                    )}
-                    keyExtractor={(item) => String(item.id)}
-                />
-            )}
+            <FlatList
+                refreshControl={
+                    <RefreshControl colors={[THEME.DANGER_COLOR]} refreshing={refreshing} onRefresh={onRefresh} />
+                }
+                data={users.users}
+                renderItem={({ item }) => (
+                    <List.Item
+                        style={styles.item}
+                        title={item.name}
+                        titleStyle={styles.title}
+                        titleEllipsizeMode={"middle"}
+                        left={() => <Image style={styles.image} source={personPath} />}
+                        onPress={() => onPresshandler(item.name)}
+                    />
+                )}
+                keyExtractor={(item) => String(item.id)}
+            />
             <AppSnackbar visible={visible} message={error} dismiss={onDismissSnackBar} />
         </View>
     );

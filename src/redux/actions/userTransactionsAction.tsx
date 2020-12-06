@@ -3,13 +3,11 @@ import { Http } from "../../api/http";
 import { IUserTransactions } from "../reducers/userTransactionsReducer";
 import {
     CLEAR_GET_USER_TRANSACTIONS_ERROR_MESSAGE,
-    GET_USER_TRANSACTIONS,
     GET_USER_TRANSACTIONS_FAILURE,
     GET_USER_TRANSACTIONS_SUCCESS,
 } from "../types";
 
-export async function getUserTransactions(token: string, dispatch: Dispatch) {
-    dispatch({ type: GET_USER_TRANSACTIONS });
+export async function getUserTransactions(token: string, dispatch: Dispatch, cb: Function) {
     try {
         const data = await Http.getHistory(token);
         let history: IUserTransactions[] = data.trans_token;
@@ -19,8 +17,10 @@ export async function getUserTransactions(token: string, dispatch: Dispatch) {
             return j - i;
         });
         dispatch({ type: GET_USER_TRANSACTIONS_SUCCESS, payload: history });
+        cb();
     } catch (e) {
         dispatch({ type: GET_USER_TRANSACTIONS_FAILURE, payload: String(e) });
+        cb();
     }
 }
 

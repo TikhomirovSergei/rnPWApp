@@ -1,7 +1,6 @@
 import { AnyAction } from "redux";
 import {
     CLEAR_GET_USER_TRANSACTIONS_ERROR_MESSAGE,
-    GET_USER_TRANSACTIONS,
     GET_USER_TRANSACTIONS_FAILURE,
     GET_USER_TRANSACTIONS_SUCCESS,
 } from "../types";
@@ -16,33 +15,24 @@ export interface IUserTransactions {
 
 interface IState {
     history: IUserTransactions[];
-    loading: boolean;
     error: string;
 }
 
 const initialState: IState = {
     history: [],
-    loading: false,
     error: "",
 };
 
 export function userTransactions(state = initialState, action: AnyAction) {
     switch (action.type) {
-        case GET_USER_TRANSACTIONS:
-            return {
-                ...state,
-                loading: true,
-            };
         case GET_USER_TRANSACTIONS_SUCCESS:
             return {
                 ...state,
-                loading: false,
                 history: action.payload,
             };
         case GET_USER_TRANSACTIONS_FAILURE:
             return {
                 ...state,
-                loading: false,
                 error: action.payload,
             };
         case CLEAR_GET_USER_TRANSACTIONS_ERROR_MESSAGE:
