@@ -1,12 +1,13 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { View, TextInput, StyleSheet, Image, Text } from "react-native";
 
 import { AppButton } from "../components/ui/AppButton";
 import { AppButtonLoaderText } from "../components/ui/AppButtonLoaderText";
+import { AppSnackbar } from "../components/ui/AppSnackbar";
 
-import { auth } from "../redux/actions/mainAction";
+import { auth, clearErrorMessage, setErrorMessage } from "../redux/actions/mainAction";
 
 import { THEME } from "../theme";
 import { logoPath } from "../path";
@@ -14,11 +15,17 @@ import { logoPath } from "../path";
 export const AuthScreen = () => {
     const [email, setEmail] = useState("123456@gmail.com");
     const [password, setPassword] = useState("qwerty");
+    const [visible, setVisible] = useState(false);
 
     const loading: boolean = useSelector((state) => state.main.loading);
+    const error: string = useSelector((state) => state.main.error);
     const dispatch = useDispatch();
 
     const navigation = useNavigation();
+
+    useEffect(() => {
+        setVisible(!!error.length);
+    }, [error]);
 
     const logo = () => (
         <View style={styles.imageWrapper}>
@@ -49,7 +56,7 @@ export const AuthScreen = () => {
         if (!!email && !!password) {
             auth(email, password, dispatch);
         } else {
-            // TODO: showToast
+            setErrorMessage("Все поля обязательны для заполнения", dispatch);
         }
     };
 
@@ -67,11 +74,17 @@ export const AuthScreen = () => {
         </View>
     );
 
+    const onDismissSnackBar = () => {
+        clearErrorMessage(dispatch);
+        setVisible(false);
+    };
+
     return (
         <View style={styles.container}>
             {logo()}
             {inputView()}
             {buttonView()}
+            <AppSnackbar visible={visible} message={error} dismiss={onDismissSnackBar} />
         </View>
     );
 };

@@ -29,6 +29,30 @@ export class Http {
             throw e;
         }
     }
+
+    static async getUsers(token: string) {
+        try {
+            const headers = {
+                ...Http.headers,
+                ...{ Authorization: `Bearer ${token}` },
+            };
+            return await request(`${Http.baseUrl}/api/protected/transactions`, "GET", headers);
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    static async createTransaction(token: string, name: string, amount: number) {
+        try {
+            const headers = {
+                ...Http.headers,
+                ...{ Authorization: `Bearer ${token}` },
+            };
+            return await request(`${Http.baseUrl}/api/protected/transactions`, "POST", headers, { name, amount });
+        } catch (e) {
+            throw e;
+        }
+    }
 }
 
 async function request(url: string, method, headers: object, data?: object) {
@@ -42,5 +66,6 @@ async function request(url: string, method, headers: object, data?: object) {
     }
 
     const response = await fetch(url, config);
+    if (response.status > 299) throw new Error(await response.text());
     return await response.json();
 }

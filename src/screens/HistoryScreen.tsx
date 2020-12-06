@@ -3,7 +3,7 @@ import { View, StyleSheet } from "react-native";
 
 import { THEME } from "../theme";
 
-export const HistoryScreen = () => {
+export const HistoryScreen = ({ navigation }) => {
     return <View style={styles.container}></View>;
 };
 
