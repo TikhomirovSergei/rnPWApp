@@ -5,6 +5,7 @@ import {
     AUTH_SUCCESS,
     CLEAR_ERROR_MESSAGE,
     GET_USER_INFO_FAILURE,
+    LOGOUT,
     REGISTER,
     REGISTER_FAILURE,
     REGISTER_SUCCESS,
@@ -73,6 +74,11 @@ export function main(state = initialState, action: AnyAction) {
                 ...state,
                 authError: "",
                 regError: "",
+            };
+        case LOGOUT:
+            return {
+                ...state,
+                isLoggedIn: false,
             };
         default:
             return state;

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useLayoutEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { View, Text, TextInput, StyleSheet, Image } from "react-native";
+import { IconButton } from "react-native-paper";
 
 import { AppButton } from "../components/ui/AppButton";
 import { AppButtonLoaderText } from "../components/ui/AppButtonLoaderText";
@@ -15,6 +16,7 @@ import {
     setUserErrorMessage,
 } from "../redux/actions/userAction";
 import { IUserInfo } from "../redux/reducers/userReducer";
+import { logout } from "../redux/actions/mainAction";
 
 import { THEME } from "../theme";
 import { nextPath, personPath } from "../path";
@@ -33,6 +35,7 @@ export const MainScreen = ({ navigation }) => {
 
     useLayoutEffect(() => {
         navigation.setOptions({
+            headerLeft: () => <IconButton icon="logout" color="black" size={24} onPress={() => logout(dispatch)} />,
             headerRight: () => <AppHeaderRight name={user.name} balance={user.balance} />,
         });
     }, [navigation, user]);
