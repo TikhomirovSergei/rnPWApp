@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useLayoutEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { View, Text, TextInput, StyleSheet, Image } from "react-native";
 
@@ -6,6 +6,7 @@ import { AppButton } from "../components/ui/AppButton";
 import { AppButtonLoaderText } from "../components/ui/AppButtonLoaderText";
 import { AppLoader } from "../components/ui/AppLoader";
 import { AppSnackbar } from "../components/ui/AppSnackbar";
+import { AppHeaderRight } from "../components/ui/AppHeaderRight";
 
 import {
     clearUserErrorMessage,
@@ -29,6 +30,12 @@ export const MainScreen = ({ navigation }) => {
     const error: string = useSelector((state) => state.user.error);
     const token: string = useSelector((state) => state.main.token);
     const dispatch = useDispatch();
+
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            headerRight: () => <AppHeaderRight name={user.name} balance={user.balance} />,
+        });
+    }, [navigation, user]);
 
     useEffect(() => {
         getUserInfo(token, dispatch);
@@ -61,7 +68,7 @@ export const MainScreen = ({ navigation }) => {
         }
 
         if (amount === "" || parseInt(amount) === NaN || parseInt(amount) < 0) {
-            setUserErrorMessage("Сумма транзакции должна быть положительным целым числом", dispatch);
+            setUserErrorMessage("Сумма перевода должна быть положительным целым числом", dispatch);
             return;
         }
 
@@ -114,7 +121,7 @@ export const MainScreen = ({ navigation }) => {
                             onChangeText={setAmount}
                             style={styles.input}
                             keyboardType="numeric"
-                            placeholder="Сумма транзакции"
+                            placeholder="Сумма перевода"
                             maxLength={10}
                         />
                     </View>

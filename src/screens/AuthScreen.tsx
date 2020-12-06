@@ -13,8 +13,8 @@ import { THEME } from "../theme";
 import { logoPath } from "../path";
 
 export const AuthScreen = () => {
-    const [email, setEmail] = useState("123456@gmail.com");
-    const [password, setPassword] = useState("qwerty");
+    const [email, setEmail] = useState(/*"123456@gmail.com"*/ "");
+    const [password, setPassword] = useState(/*"qwerty"*/ "");
     const [visible, setVisible] = useState(false);
 
     const loading: boolean = useSelector((state) => state.main.loading);

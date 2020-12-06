@@ -1,26 +1,35 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useLayoutEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { View, StyleSheet, FlatList, Image, RefreshControl } from "react-native";
 import { List } from "react-native-paper";
 
 import { AppSnackbar } from "../components/ui/AppSnackbar";
+import { AppHeaderRight } from "../components/ui/AppHeaderRight";
 
 import { clearGetUserListErrorMessage, getUsers } from "../redux/actions/userListAction";
 import { IUserListState } from "../redux/reducers/userListReducer";
+import { IUserInfo } from "../redux/reducers/userReducer";
 
 import { THEME } from "../theme";
-import { personPath } from "../path";
+import { personGrayPath } from "../path";
 
 export const UserListScreen = ({ route, navigation }) => {
     const [visible, setVisible] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
 
+    const user: IUserInfo = useSelector((state) => state.user.user);
     const users: IUserListState = useSelector((state) => state.userList.users);
     const error: string = useSelector((state) => state.userList.error);
     const token: string = useSelector((state) => state.main.token);
     const dispatch = useDispatch();
 
     const { setRecipient } = route.params;
+
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            headerRight: () => <AppHeaderRight name={user.name} balance={user.balance} />,
+        });
+    }, [navigation, user]);
 
     useEffect(() => {
         setVisible(!!error.length);
@@ -51,14 +60,14 @@ export const UserListScreen = ({ route, navigation }) => {
                 refreshControl={
                     <RefreshControl colors={[THEME.DANGER_COLOR]} refreshing={refreshing} onRefresh={onRefresh} />
                 }
-                data={users.users}
+                data={users}
                 renderItem={({ item }) => (
                     <List.Item
                         style={styles.item}
                         title={item.name}
                         titleStyle={styles.title}
                         titleEllipsizeMode={"middle"}
-                        left={() => <Image style={styles.image} source={personPath} />}
+                        left={() => <Image style={styles.image} source={personGrayPath} />}
                         onPress={() => onPresshandler(item.name)}
                     />
                 )}
@@ -85,9 +94,6 @@ const styles = StyleSheet.create({
     image: {
         width: 45,
         height: 45,
-        borderRadius: 22.5,
-        borderColor: "red",
-        borderWidth: 0.3,
         marginHorizontal: 10,
         alignSelf: "center",
     },

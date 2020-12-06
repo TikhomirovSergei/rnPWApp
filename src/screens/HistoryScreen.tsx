@@ -1,23 +1,32 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useLayoutEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { View, StyleSheet, FlatList, Text, RefreshControl } from "react-native";
 import { List } from "react-native-paper";
 
 import { AppSnackbar } from "../components/ui/AppSnackbar";
+import { AppHeaderRight } from "../components/ui/AppHeaderRight";
 
 import { clearGetUserTransactionsErrorMessage, getUserTransactions } from "../redux/actions/userTransactionsAction";
 import { IUserTransactions } from "../redux/reducers/userTransactionsReducer";
+import { IUserInfo } from "../redux/reducers/userReducer";
 
 import { THEME } from "../theme";
 
-export const HistoryScreen = () => {
+export const HistoryScreen = ({ navigation }) => {
     const [visible, setVisible] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
 
+    const user: IUserInfo = useSelector((state) => state.user.user);
     const history: IUserTransactions[] = useSelector((state) => state.userTransactions.history);
     const error: string = useSelector((state) => state.userTransactions.error);
     const token: string = useSelector((state) => state.main.token);
     const dispatch = useDispatch();
+
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            headerRight: () => <AppHeaderRight name={user.name} balance={user.balance} />,
+        });
+    }, [navigation, user]);
 
     useEffect(() => {
         setVisible(!!error.length);
@@ -48,6 +57,15 @@ export const HistoryScreen = () => {
         );
     };
 
+    const balanceView = (balance: number) => {
+        return (
+            <View style={styles.date}>
+                <Text>Баланс</Text>
+                <Text>{balance}</Text>
+            </View>
+        );
+    };
+
     const onDismissSnackBar = () => {
         clearGetUserTransactionsErrorMessage(dispatch);
         setVisible(false);
@@ -63,12 +81,13 @@ export const HistoryScreen = () => {
                 renderItem={({ item }) => (
                     <List.Item
                         style={styles.item}
-                        title={`Кому: ${item.username}`}
+                        title={`${item.username}`}
                         titleStyle={styles.title}
                         titleEllipsizeMode={"middle"}
                         description={`Переведено: ${item.amount} PW`}
                         descriptionNumberOfLine={1}
                         left={() => dateView(item.date)}
+                        right={() => balanceView(item.balance)}
                     />
                 )}
                 keyExtractor={(item) => String(item.id)}
