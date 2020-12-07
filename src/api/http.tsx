@@ -60,7 +60,7 @@ export class Http {
                 ...Http.headers,
                 ...{ Authorization: `Bearer ${token}` },
             };
-            return await request(`${Http.baseUrl}/api/protected/users/list`, "POST", headers, {});
+            return await request(`${Http.baseUrl}/api/protected/users/list`, "POST", headers, { filter: " " });
         } catch (e) {
             throw e;
         }
