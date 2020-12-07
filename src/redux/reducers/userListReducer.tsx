@@ -12,12 +12,7 @@ export interface IUserListState {
 }
 
 const initialState: IUserListState = {
-    users: [
-        /*{
-            id: 100,
-            name: "username",
-        },*/
-    ],
+    users: [],
     error: "",
 };
 
