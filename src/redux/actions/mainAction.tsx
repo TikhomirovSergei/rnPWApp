@@ -1,5 +1,5 @@
 import { Dispatch } from "redux";
-import { Http } from "../../api/http";
+import { AuthAPI } from "../../api/authAPI";
 import {
     AUTH,
     AUTH_FAILURE,
@@ -16,20 +16,20 @@ import {
 export async function auth(email: string, password: string, dispatch: Dispatch) {
     dispatch({ type: AUTH });
     try {
-        const token = await Http.login(email, password);
-        dispatch({ type: AUTH_SUCCESS, payload: { token: token.id_token } });
-    } catch (e) {
-        dispatch({ type: AUTH_FAILURE, payload: String(e) });
+        const token = await AuthAPI.login(email, password);
+        dispatch({ type: AUTH_SUCCESS, payload: { token } });
+    } catch (error) {
+        dispatch({ type: AUTH_FAILURE, payload: error.response ? error.response.data : error.message });
     }
 }
 
 export async function register(username: string, email: string, password: string, dispatch: Dispatch) {
     dispatch({ type: REGISTER });
     try {
-        const token = await Http.register(username, email, password);
-        dispatch({ type: REGISTER_SUCCESS, payload: { token: token.id_token } });
-    } catch (e) {
-        dispatch({ type: REGISTER_FAILURE, payload: String(e) });
+        const token = await AuthAPI.register(username, email, password);
+        dispatch({ type: REGISTER_SUCCESS, payload: { token } });
+    } catch (error) {
+        dispatch({ type: REGISTER_FAILURE, payload: error.response ? error.response.data : error.message });
     }
 }
 

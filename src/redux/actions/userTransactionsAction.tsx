@@ -1,5 +1,5 @@
 import { Dispatch } from "redux";
-import { Http } from "../../api/http";
+import { TransactionsAPI } from "../../api/transactionsAPI";
 import { IUserTransactions } from "../reducers/userTransactionsReducer";
 import {
     CLEAR_GET_USER_TRANSACTIONS_ERROR_MESSAGE,
@@ -9,8 +9,7 @@ import {
 
 export async function getUserTransactions(token: string, dispatch: Dispatch, cb: Function) {
     try {
-        const data = await Http.getHistory(token);
-        let history: IUserTransactions[] = data.trans_token;
+        let history: IUserTransactions[] = await TransactionsAPI.getHistory(token);
         history = history.sort((a, b) => {
             const i = new Date(a.date).getTime();
             const j = new Date(b.date).getTime();
@@ -18,8 +17,11 @@ export async function getUserTransactions(token: string, dispatch: Dispatch, cb:
         });
         dispatch({ type: GET_USER_TRANSACTIONS_SUCCESS, payload: history });
         cb();
-    } catch (e) {
-        dispatch({ type: GET_USER_TRANSACTIONS_FAILURE, payload: String(e) });
+    } catch (error) {
+        dispatch({
+            type: GET_USER_TRANSACTIONS_FAILURE,
+            payload: error.response ? error.response.data : error.message,
+        });
         cb();
     }
 }

@@ -1,5 +1,6 @@
 import { Dispatch } from "redux";
-import { Http } from "../../api/http";
+import { ProfileAPI } from "../../api/profileAPI";
+import { TransactionsAPI } from "../../api/transactionsAPI";
 import { IUserInfo } from "../reducers/userReducer";
 import {
     CLEAR_USER_ERROR_MESSAGE,
@@ -15,21 +16,20 @@ import {
 export async function getUserInfo(token: string, dispatch: Dispatch) {
     dispatch({ type: GET_USER_INFO });
     try {
-        const data = await Http.getUserInfo(token);
-        const user: IUserInfo = data.user_info_token;
+        const user: IUserInfo = await ProfileAPI.getUserInfo(token);
         dispatch({ type: GET_USER_INFO_SUCCESS, payload: user });
-    } catch (e) {
-        dispatch({ type: GET_USER_INFO_FAILURE, payload: String(e) });
+    } catch (error) {
+        dispatch({ type: GET_USER_INFO_FAILURE, payload: error.response ? error.response.data : error.message });
     }
 }
 
 export async function createTransaction(token: string, name: string, amount: number, dispatch: Dispatch) {
     dispatch({ type: CREATE_TRANSACTION });
     try {
-        await Http.createTransaction(token, name, amount);
+        await TransactionsAPI.createTransaction(token, name, amount);
         dispatch({ type: CREATE_TRANSACTION_SUCCESS, payload: amount });
-    } catch (e) {
-        dispatch({ type: CREATE_TRANSACTION_FAILURE, payload: String(e) });
+    } catch (error) {
+        dispatch({ type: CREATE_TRANSACTION_FAILURE, payload: error.response ? error.response.data : error.message });
     }
 }
 
