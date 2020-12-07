@@ -38,6 +38,7 @@ export const ReqisterScreen = ({}) => {
             <TextInput
                 value={password}
                 onChangeText={setPassword}
+                secureTextEntry={true}
                 style={styles.input}
                 placeholder="Пароль"
                 maxLength={32}
@@ -45,6 +46,7 @@ export const ReqisterScreen = ({}) => {
             <TextInput
                 value={confirm}
                 onChangeText={setConfirm}
+                secureTextEntry={true}
                 style={styles.input}
                 placeholder="Подтверждение пароля"
                 maxLength={32}

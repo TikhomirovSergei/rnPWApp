@@ -45,6 +45,7 @@ export const AuthScreen = () => {
             <TextInput
                 value={password}
                 onChangeText={setPassword}
+                secureTextEntry={true}
                 style={styles.input}
                 placeholder="Пароль"
                 maxLength={32}
