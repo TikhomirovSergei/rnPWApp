@@ -16,7 +16,7 @@ import {
 export async function auth(email: string, password: string, dispatch: Dispatch) {
     dispatch({ type: AUTH });
     try {
-        const token = await AuthAPI.login(email, password);
+        const token: string = await AuthAPI.login(email, password);
         dispatch({ type: AUTH_SUCCESS, payload: { token } });
     } catch (error) {
         dispatch({ type: AUTH_FAILURE, payload: error.response ? error.response.data : error.message });
@@ -26,7 +26,7 @@ export async function auth(email: string, password: string, dispatch: Dispatch) 
 export async function register(username: string, email: string, password: string, dispatch: Dispatch) {
     dispatch({ type: REGISTER });
     try {
-        const token = await AuthAPI.register(username, email, password);
+        const token: string = await AuthAPI.register(username, email, password);
         dispatch({ type: REGISTER_SUCCESS, payload: { token } });
     } catch (error) {
         dispatch({ type: REGISTER_FAILURE, payload: error.response ? error.response.data : error.message });
