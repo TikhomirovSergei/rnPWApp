@@ -11,4 +11,6 @@ const rootReducer = combineReducers({
     userList,
 });
 
+export type TState = ReturnType<typeof rootReducer>;
+
 export default rootReducer;

@@ -17,14 +17,14 @@ export interface IUserInfo {
     balance: number;
 }
 
-interface IState {
+interface IUserState {
     user: IUserInfo;
     loading: boolean;
     transactionLoading: boolean;
     error: string;
 }
 
-const initialState: IState = {
+const initialState: IUserState = {
     user: { id: 0, name: "", email: "", balance: 0 },
     loading: false,
     transactionLoading: false,

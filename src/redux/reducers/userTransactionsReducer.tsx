@@ -13,12 +13,12 @@ export interface IUserTransactions {
     balance: number;
 }
 
-interface IState {
+interface IUserTransactionsState {
     history: IUserTransactions[];
     error: string;
 }
 
-const initialState: IState = {
+const initialState: IUserTransactionsState = {
     history: [],
     error: "",
 };

@@ -1,5 +1,4 @@
-import { useNavigation } from "@react-navigation/native";
-import React, { useState, useEffect } from "react";
+import * as React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { View, TextInput, StyleSheet, Image, Text } from "react-native";
 
@@ -8,24 +7,23 @@ import { AppButtonLoaderText } from "../components/ui/AppButtonLoaderText";
 import { AppSnackbar } from "../components/ui/AppSnackbar";
 
 import { auth, clearErrorMessage, setErrorMessage } from "../redux/actions/mainAction";
+import { TState } from "../redux/reducers";
 
 import { validateEmail } from "../utils/validateUtils";
 
 import { THEME } from "../theme";
 import { logoPath } from "../path";
 
-export const AuthScreen = () => {
-    const [email, setEmail] = useState(/*"123456@gmail.com"*/ "");
-    const [password, setPassword] = useState(/*"qwerty"*/ "");
-    const [visible, setVisible] = useState(false);
+export const AuthScreen = ({ navigation }) => {
+    const [email, setEmail] = React.useState("123456@gmail.com");
+    const [password, setPassword] = React.useState("qwerty");
+    const [visible, setVisible] = React.useState(false);
 
-    const loading: boolean = useSelector((state) => state.main.loading);
-    const error: string = useSelector((state) => state.main.authError);
+    const loading = useSelector((state: TState) => state.main.loading);
+    const error = useSelector((state: TState) => state.main.authError);
     const dispatch = useDispatch();
 
-    const navigation = useNavigation();
-
-    useEffect(() => {
+    React.useEffect(() => {
         setVisible(!!error.length);
     }, [error]);
 

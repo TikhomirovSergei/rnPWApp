@@ -9,10 +9,12 @@ import { MainScreen } from "../screens/MainScreen";
 import { UserListScreen } from "../screens/UserListScreen";
 import { HistoryScreen } from "../screens/HistoryScreen";
 
+import { TState } from "../redux/reducers";
+
 const Stack = createStackNavigator();
 
 const NavStack = () => {
-    const isLoggedIn: boolean = useSelector((state) => state.main.isLoggedIn);
+    const isLoggedIn = useSelector((state: TState) => state.main.isLoggedIn);
 
     return isLoggedIn ? (
         <Stack.Navigator

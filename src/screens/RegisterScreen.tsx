@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import * as React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { View, TextInput, StyleSheet } from "react-native";
 
@@ -7,23 +7,24 @@ import { AppButtonLoaderText } from "../components/ui/AppButtonLoaderText";
 import { AppSnackbar } from "../components/ui/AppSnackbar";
 
 import { clearErrorMessage, register, seRegErrorMessage } from "../redux/actions/mainAction";
+import { TState } from "../redux/reducers";
 
 import { validateEmail } from "../utils/validateUtils";
 
 import { THEME } from "../theme";
 
 export const ReqisterScreen = ({}) => {
-    const [username, setUsername] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [confirm, setConfirm] = useState("");
-    const [visible, setVisible] = useState(false);
+    const [username, setUsername] = React.useState("");
+    const [email, setEmail] = React.useState("");
+    const [password, setPassword] = React.useState("");
+    const [confirm, setConfirm] = React.useState("");
+    const [visible, setVisible] = React.useState(false);
 
-    const loading: boolean = useSelector((state) => state.main.loading);
-    const error: string = useSelector((state) => state.main.regError);
+    const loading = useSelector((state: TState) => state.main.loading);
+    const error = useSelector((state: TState) => state.main.regError);
     const dispatch = useDispatch();
 
-    useEffect(() => {
+    React.useEffect(() => {
         setVisible(error.length);
     }, [error]);
 

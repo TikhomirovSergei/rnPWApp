@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { StyleSheet, View, TouchableOpacity, StyleProp, ViewStyle } from "react-native";
 
 import { THEME } from "../../theme";
@@ -11,7 +11,7 @@ interface IAppButtonProps {
     onPress(): void;
 }
 
-export const AppButton = (props: IAppButtonProps): React.ReactNode => (
+export const AppButton = (props: IAppButtonProps) => (
     <TouchableOpacity
         onPress={props.onPress}
         disabled={props.disabled ?? false}

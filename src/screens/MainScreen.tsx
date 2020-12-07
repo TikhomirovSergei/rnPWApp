@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect } from "react";
+import * as React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { View, Text, TextInput, StyleSheet, Image } from "react-native";
 import { IconButton } from "react-native-paper";
@@ -15,36 +15,36 @@ import {
     getUserInfo,
     setUserErrorMessage,
 } from "../redux/actions/userAction";
-import { IUserInfo } from "../redux/reducers/userReducer";
 import { logout } from "../redux/actions/mainAction";
+import { TState } from "../redux/reducers";
 
 import { THEME } from "../theme";
 import { nextPath, personPath } from "../path";
 
 export const MainScreen = ({ navigation }) => {
-    const [recipient, setRecipient] = useState("");
-    const [amount, setAmount] = useState("");
-    const [visible, setVisible] = useState(false);
+    const [recipient, setRecipient] = React.useState("");
+    const [amount, setAmount] = React.useState("");
+    const [visible, setVisible] = React.useState(false);
 
-    const user: IUserInfo = useSelector((state) => state.user.user);
-    const userLoading: boolean = useSelector((state) => state.user.loading);
-    const transactionLoading: boolean = useSelector((state) => state.user.transactionLoading);
-    const error: string = useSelector((state) => state.user.error);
-    const token: string = useSelector((state) => state.main.token);
+    const user = useSelector((state: TState) => state.user.user);
+    const userLoading = useSelector((state: TState) => state.user.loading);
+    const transactionLoading = useSelector((state: TState) => state.user.transactionLoading);
+    const error = useSelector((state: TState) => state.user.error);
+    const token = useSelector((state: TState) => state.main.token);
     const dispatch = useDispatch();
 
-    useLayoutEffect(() => {
+    React.useLayoutEffect(() => {
         navigation.setOptions({
             headerLeft: () => <IconButton icon="logout" color="black" size={24} onPress={() => logout(dispatch)} />,
             headerRight: () => <AppHeaderRight name={user.name} balance={user.balance} />,
         });
     }, [navigation, user]);
 
-    useEffect(() => {
+    React.useEffect(() => {
         getUserInfo(token, dispatch);
     }, []);
 
-    useEffect(() => {
+    React.useEffect(() => {
         setVisible(!!error.length);
     }, [error]);
 

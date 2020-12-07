@@ -13,7 +13,7 @@ import {
     SET_REG_ERROR_MESSAGE,
 } from "../types";
 
-interface IState {
+interface IMainState {
     isLoggedIn: boolean;
     loading: boolean;
     token: string;
@@ -21,7 +21,7 @@ interface IState {
     regError: string;
 }
 
-const initialState: IState = {
+const mainInitialState: IMainState = {
     isLoggedIn: false,
     loading: false,
     token: "",
@@ -29,7 +29,7 @@ const initialState: IState = {
     regError: "",
 };
 
-export function main(state = initialState, action: AnyAction) {
+export function main(state = mainInitialState, action: AnyAction) {
     switch (action.type) {
         case AUTH:
         case REGISTER:

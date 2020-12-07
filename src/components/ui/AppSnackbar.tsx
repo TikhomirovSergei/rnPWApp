@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { Snackbar } from "react-native-paper";
 import { StyleSheet, Text } from "react-native";
 

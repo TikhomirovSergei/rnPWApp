@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { StyleSheet, View, Text } from "react-native";
 
 import { AppLoader } from "./AppLoader";
@@ -10,7 +10,7 @@ interface IAppButtonLoaderTextProps {
     text: string;
 }
 
-export const AppButtonLoaderText = (props: IAppButtonLoaderTextProps): React.ReactNode => (
+export const AppButtonLoaderText = (props: IAppButtonLoaderTextProps) => (
     <View style={styles.wrap}>
         {props.loading ? <AppLoader styles={styles.loader} size="small" color={"#ffffff"} /> : null}
         <Text style={styles.text}>{props.text}</Text>

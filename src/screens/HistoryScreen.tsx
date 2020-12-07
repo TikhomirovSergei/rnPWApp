@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useLayoutEffect } from "react";
+import * as React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { View, StyleSheet, FlatList, Text, RefreshControl } from "react-native";
 import { List } from "react-native-paper";
@@ -7,36 +7,35 @@ import { AppSnackbar } from "../components/ui/AppSnackbar";
 import { AppHeaderRight } from "../components/ui/AppHeaderRight";
 
 import { clearGetUserTransactionsErrorMessage, getUserTransactions } from "../redux/actions/userTransactionsAction";
-import { IUserTransactions } from "../redux/reducers/userTransactionsReducer";
-import { IUserInfo } from "../redux/reducers/userReducer";
+import { TState } from "../redux/reducers";
 
 import { THEME } from "../theme";
 
 export const HistoryScreen = ({ navigation }) => {
-    const [visible, setVisible] = useState(false);
-    const [refreshing, setRefreshing] = useState(false);
+    const [visible, setVisible] = React.useState(false);
+    const [refreshing, setRefreshing] = React.useState(false);
 
-    const user: IUserInfo = useSelector((state) => state.user.user);
-    const history: IUserTransactions[] = useSelector((state) => state.userTransactions.history);
-    const error: string = useSelector((state) => state.userTransactions.error);
-    const token: string = useSelector((state) => state.main.token);
+    const user = useSelector((state: TState) => state.user.user);
+    const history = useSelector((state: TState) => state.userTransactions.history);
+    const error = useSelector((state: TState) => state.userTransactions.error);
+    const token = useSelector((state: TState) => state.main.token);
     const dispatch = useDispatch();
 
-    useLayoutEffect(() => {
+    React.useLayoutEffect(() => {
         navigation.setOptions({
             headerRight: () => <AppHeaderRight name={user.name} balance={user.balance} />,
         });
     }, [navigation, user]);
 
-    useEffect(() => {
+    React.useEffect(() => {
         setVisible(!!error.length);
     }, [error]);
 
-    useEffect(() => {
+    React.useEffect(() => {
         onRefresh();
     }, []);
 
-    const onRefresh = useCallback(() => {
+    const onRefresh = React.useCallback(() => {
         setRefreshing(true);
         getUserTransactions(token, dispatch, () => setRefreshing(false));
     }, []);
@@ -85,7 +84,7 @@ export const HistoryScreen = ({ navigation }) => {
                         titleStyle={styles.title}
                         titleEllipsizeMode={"middle"}
                         description={`Переведено: ${item.amount} PW`}
-                        descriptionNumberOfLine={1}
+                        descriptionNumberOfLines={1}
                         left={() => dateView(item.date)}
                         right={() => balanceView(item.balance)}
                     />

@@ -1,12 +1,12 @@
 import { AnyAction } from "redux";
 import { CLEAR_GET_USER_LIST_ERROR_MESSAGE, GET_USER_LIST_FAILURE, GET_USER_LIST_SUCCESS } from "../types";
 
-export interface IUserState {
+interface IUserState {
     id: number;
     name: string;
 }
 
-export interface IUserListState {
+interface IUserListState {
     users: IUserState[];
     error: string;
 }
