@@ -9,6 +9,8 @@ import { AppSnackbar } from "../components/ui/AppSnackbar";
 
 import { auth, clearErrorMessage, setErrorMessage } from "../redux/actions/mainAction";
 
+import { validateEmail } from "../utils/validateUtils";
+
 import { THEME } from "../theme";
 import { logoPath } from "../path";
 
@@ -55,6 +57,11 @@ export const AuthScreen = () => {
 
     const onPressHandler = () => {
         if (!!email && !!password) {
+            if (!validateEmail(email)) {
+                setErrorMessage("Некорректный email", dispatch);
+                return;
+            }
+
             auth(email, password, dispatch);
         } else {
             setErrorMessage("Все поля обязательны для заполнения", dispatch);

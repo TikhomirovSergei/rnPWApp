@@ -8,6 +8,8 @@ import { AppSnackbar } from "../components/ui/AppSnackbar";
 
 import { clearErrorMessage, register, seRegErrorMessage } from "../redux/actions/mainAction";
 
+import { validateEmail } from "../utils/validateUtils";
+
 import { THEME } from "../theme";
 
 export const ReqisterScreen = ({}) => {
@@ -54,14 +56,9 @@ export const ReqisterScreen = ({}) => {
         </View>
     );
 
-    const validateEmail = (): boolean => {
-        const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        return re.test(String(email).toLowerCase());
-    };
-
     const onPressHandler = () => {
         if (!!username && !!email && !!password && !!confirm) {
-            if (!validateEmail()) {
+            if (!validateEmail(email)) {
                 seRegErrorMessage("Некорректный email", dispatch);
                 return;
             }
