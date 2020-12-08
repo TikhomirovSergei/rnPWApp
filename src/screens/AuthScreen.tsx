@@ -15,8 +15,8 @@ import { THEME } from "../theme";
 import { logoPath } from "../path";
 
 export const AuthScreen = ({ navigation }) => {
-    const [email, setEmail] = React.useState("123456@gmail.com");
-    const [password, setPassword] = React.useState("qwerty");
+    const [email, setEmail] = React.useState("");
+    const [password, setPassword] = React.useState("");
     const [visible, setVisible] = React.useState(false);
 
     const loading = useSelector((state: RootState) => state.main.loading);
