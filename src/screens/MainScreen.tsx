@@ -9,14 +9,15 @@ import { AppLoader } from "../components/ui/AppLoader";
 import { AppSnackbar } from "../components/ui/AppSnackbar";
 import { AppHeaderRight } from "../components/ui/AppHeaderRight";
 
+import { logout } from "../redux/mainSlice";
 import {
+    asyncCreateTransaction,
+    asyncGetProfile,
     clearUserErrorMessage,
-    createTransaction,
-    getUserInfo,
+    createTransactionLoading,
     setUserErrorMessage,
-} from "../redux/actions/userAction";
-import { logout } from "../redux/actions/mainAction";
-import { TState } from "../redux/reducers";
+} from "../redux/userSlice";
+import { RootState } from "../redux/rootReducer";
 
 import { THEME } from "../theme";
 import { nextPath, personPath } from "../path";
@@ -26,22 +27,22 @@ export const MainScreen = ({ navigation }) => {
     const [amount, setAmount] = React.useState("");
     const [visible, setVisible] = React.useState(false);
 
-    const user = useSelector((state: TState) => state.user.user);
-    const userLoading = useSelector((state: TState) => state.user.loading);
-    const transactionLoading = useSelector((state: TState) => state.user.transactionLoading);
-    const error = useSelector((state: TState) => state.user.error);
-    const token = useSelector((state: TState) => state.main.token);
+    const user = useSelector((state: RootState) => state.user.user);
+    const userLoading = useSelector((state: RootState) => state.user.loading);
+    const transactionLoading = useSelector((state: RootState) => state.user.transactionLoading);
+    const error = useSelector((state: RootState) => state.user.error);
+    const token = useSelector((state: RootState) => state.main.token);
     const dispatch = useDispatch();
 
     React.useLayoutEffect(() => {
         navigation.setOptions({
-            headerLeft: () => <IconButton icon="logout" color="black" size={24} onPress={() => logout(dispatch)} />,
+            headerLeft: () => <IconButton icon="logout" color="black" size={24} onPress={() => dispatch(logout())} />,
             headerRight: () => <AppHeaderRight name={user.name} balance={user.balance} />,
         });
     }, [navigation, user]);
 
     React.useEffect(() => {
-        getUserInfo(token, dispatch);
+        dispatch(asyncGetProfile(token));
     }, []);
 
     React.useEffect(() => {
@@ -66,21 +67,22 @@ export const MainScreen = ({ navigation }) => {
 
     const createTransactionHandler = () => {
         if (recipient.trim().length === 0) {
-            setUserErrorMessage("Пользователь не выбран", dispatch);
+            dispatch(setUserErrorMessage("Пользователь не выбран"));
             return;
         }
 
         if (amount === "" || parseInt(amount) === NaN || parseInt(amount) < 0) {
-            setUserErrorMessage("Сумма перевода должна быть положительным целым числом", dispatch);
+            dispatch(setUserErrorMessage("Сумма перевода должна быть положительным целым числом"));
             return;
         }
 
         if (user.balance < parseInt(amount)) {
-            setUserErrorMessage("Недостаточно средств для перевода", dispatch);
+            dispatch(setUserErrorMessage("Недостаточно средств для перевода"));
             return;
         }
 
-        createTransaction(token, recipient, parseInt(amount), dispatch);
+        dispatch(createTransactionLoading());
+        dispatch(asyncCreateTransaction({ token, name: recipient, amount: parseInt(amount) }));
     };
 
     const buttonView = () => (
@@ -95,7 +97,7 @@ export const MainScreen = ({ navigation }) => {
     );
 
     const onDismissSnackBar = () => {
-        clearUserErrorMessage(dispatch);
+        dispatch(clearUserErrorMessage());
         setVisible(false);
     };
 

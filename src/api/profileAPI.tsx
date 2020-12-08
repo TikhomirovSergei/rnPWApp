@@ -11,6 +11,6 @@ export class ProfileAPI {
                     ...{ Authorization: `Bearer ${token}` },
                 },
             })
-            .then((response) => response.data.user_info_token);
+            .then((response) => response.data?.user_info_token);
     }
 }

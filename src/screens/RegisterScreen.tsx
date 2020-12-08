@@ -6,8 +6,8 @@ import { AppButton } from "../components/ui/AppButton";
 import { AppButtonLoaderText } from "../components/ui/AppButtonLoaderText";
 import { AppSnackbar } from "../components/ui/AppSnackbar";
 
-import { clearErrorMessage, register, seRegErrorMessage } from "../redux/actions/mainAction";
-import { TState } from "../redux/reducers";
+import { asyncRegister, clearErrorMessage, setRegErrorMessage } from "../redux/mainSlice";
+import { RootState } from "../redux/rootReducer";
 
 import { validateEmail } from "../utils/validateUtils";
 
@@ -20,8 +20,8 @@ export const ReqisterScreen = ({}) => {
     const [confirm, setConfirm] = React.useState("");
     const [visible, setVisible] = React.useState(false);
 
-    const loading = useSelector((state: TState) => state.main.loading);
-    const error = useSelector((state: TState) => state.main.regError);
+    const loading = useSelector((state: RootState) => state.main.loading);
+    const error = useSelector((state: RootState) => state.main.regError);
     const dispatch = useDispatch();
 
     React.useEffect(() => {
@@ -60,18 +60,18 @@ export const ReqisterScreen = ({}) => {
     const onPressHandler = () => {
         if (!!username && !!email && !!password && !!confirm) {
             if (!validateEmail(email)) {
-                seRegErrorMessage("Некорректный email", dispatch);
+                dispatch(setRegErrorMessage("Некорректный email"));
                 return;
             }
 
             if (password.trim() !== confirm.trim()) {
-                seRegErrorMessage("Пароли не совпадают", dispatch);
+                dispatch(setRegErrorMessage("Пароли не совпадают"));
                 return;
             }
 
-            register(username, email, password, dispatch);
+            dispatch(asyncRegister({ username, email, password }));
         } else {
-            seRegErrorMessage("Все поля обязательны для заполнения", dispatch);
+            dispatch(setRegErrorMessage("Все поля обязательны для заполнения"));
         }
     };
 
@@ -84,7 +84,7 @@ export const ReqisterScreen = ({}) => {
     );
 
     const onDismissSnackBar = () => {
-        clearErrorMessage(dispatch);
+        dispatch(clearErrorMessage());
         setVisible(false);
     };
 

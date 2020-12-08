@@ -6,8 +6,8 @@ import { List } from "react-native-paper";
 import { AppSnackbar } from "../components/ui/AppSnackbar";
 import { AppHeaderRight } from "../components/ui/AppHeaderRight";
 
-import { clearGetUserTransactionsErrorMessage, getUserTransactions } from "../redux/actions/userTransactionsAction";
-import { TState } from "../redux/reducers";
+import { asyncGetUserTransactions, clearGetUserTransactionsErrorMessage } from "../redux/userTransactionsSlice";
+import { RootState } from "../redux/rootReducer";
 
 import { THEME } from "../theme";
 
@@ -15,10 +15,10 @@ export const HistoryScreen = ({ navigation }) => {
     const [visible, setVisible] = React.useState(false);
     const [refreshing, setRefreshing] = React.useState(false);
 
-    const user = useSelector((state: TState) => state.user.user);
-    const history = useSelector((state: TState) => state.userTransactions.history);
-    const error = useSelector((state: TState) => state.userTransactions.error);
-    const token = useSelector((state: TState) => state.main.token);
+    const user = useSelector((state: RootState) => state.user.user);
+    const history = useSelector((state: RootState) => state.userTransactions.history);
+    const error = useSelector((state: RootState) => state.userTransactions.error);
+    const token = useSelector((state: RootState) => state.main.token);
     const dispatch = useDispatch();
 
     React.useLayoutEffect(() => {
@@ -37,7 +37,7 @@ export const HistoryScreen = ({ navigation }) => {
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
-        getUserTransactions(token, dispatch, () => setRefreshing(false));
+        dispatch(asyncGetUserTransactions({ token, cb: () => setRefreshing(false) }));
     }, []);
 
     const addZero = (num: number): string => {
@@ -66,7 +66,7 @@ export const HistoryScreen = ({ navigation }) => {
     };
 
     const onDismissSnackBar = () => {
-        clearGetUserTransactionsErrorMessage(dispatch);
+        dispatch(clearGetUserTransactionsErrorMessage());
         setVisible(false);
     };
 

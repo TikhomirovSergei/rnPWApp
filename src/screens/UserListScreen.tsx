@@ -6,8 +6,8 @@ import { List } from "react-native-paper";
 import { AppSnackbar } from "../components/ui/AppSnackbar";
 import { AppHeaderRight } from "../components/ui/AppHeaderRight";
 
-import { clearGetUserListErrorMessage, getUsers } from "../redux/actions/userListAction";
-import { TState } from "../redux/reducers";
+import { asyncGetUsers, clearGetUserListErrorMessage } from "../redux/userListSlice";
+import { RootState } from "../redux/rootReducer";
 
 import { THEME } from "../theme";
 import { personGrayPath } from "../path";
@@ -16,10 +16,10 @@ export const UserListScreen = ({ route, navigation }) => {
     const [visible, setVisible] = React.useState(false);
     const [refreshing, setRefreshing] = React.useState(false);
 
-    const user = useSelector((state: TState) => state.user.user);
-    const users = useSelector((state: TState) => state.userList.users);
-    const error = useSelector((state: TState) => state.userList.error);
-    const token = useSelector((state: TState) => state.main.token);
+    const user = useSelector((state: RootState) => state.user.user);
+    const users = useSelector((state: RootState) => state.userList.users);
+    const error = useSelector((state: RootState) => state.userList.error);
+    const token = useSelector((state: RootState) => state.main.token);
     const dispatch = useDispatch();
 
     const { setRecipient } = route.params;
@@ -40,7 +40,7 @@ export const UserListScreen = ({ route, navigation }) => {
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
-        getUsers(token, dispatch, () => setRefreshing(false));
+        dispatch(asyncGetUsers({ token, cb: () => setRefreshing(false) }));
     }, []);
 
     const onPresshandler = (name) => {
@@ -49,7 +49,7 @@ export const UserListScreen = ({ route, navigation }) => {
     };
 
     const onDismissSnackBar = () => {
-        clearGetUserListErrorMessage(dispatch);
+        dispatch(clearGetUserListErrorMessage());
         setVisible(false);
     };
 

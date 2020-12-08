@@ -11,7 +11,7 @@ export class TransactionsAPI {
                     ...{ Authorization: `Bearer ${token}` },
                 },
             })
-            .then((response) => response.data.trans_token);
+            .then((response) => response.data?.trans_token);
     }
 
     static async createTransaction(token: string, name: string, amount: number) {
@@ -26,6 +26,6 @@ export class TransactionsAPI {
                     },
                 },
             )
-            .then((response) => response.data);
+            .then((response) => response.data?.trans_token?.balance);
     }
 }

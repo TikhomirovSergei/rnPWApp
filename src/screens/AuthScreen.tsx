@@ -6,8 +6,8 @@ import { AppButton } from "../components/ui/AppButton";
 import { AppButtonLoaderText } from "../components/ui/AppButtonLoaderText";
 import { AppSnackbar } from "../components/ui/AppSnackbar";
 
-import { auth, clearErrorMessage, setErrorMessage } from "../redux/actions/mainAction";
-import { TState } from "../redux/reducers";
+import { asyncAuth, clearErrorMessage, setErrorMessage, startLoading } from "../redux/mainSlice";
+import { RootState } from "../redux/rootReducer";
 
 import { validateEmail } from "../utils/validateUtils";
 
@@ -19,8 +19,8 @@ export const AuthScreen = ({ navigation }) => {
     const [password, setPassword] = React.useState("qwerty");
     const [visible, setVisible] = React.useState(false);
 
-    const loading = useSelector((state: TState) => state.main.loading);
-    const error = useSelector((state: TState) => state.main.authError);
+    const loading = useSelector((state: RootState) => state.main.loading);
+    const error = useSelector((state: RootState) => state.main.authError);
     const dispatch = useDispatch();
 
     React.useEffect(() => {
@@ -56,13 +56,14 @@ export const AuthScreen = ({ navigation }) => {
     const onPressHandler = () => {
         if (!!email && !!password) {
             if (!validateEmail(email)) {
-                setErrorMessage("Некорректный email", dispatch);
+                dispatch(setErrorMessage("Некорректный email"));
                 return;
             }
 
-            auth(email, password, dispatch);
+            dispatch(startLoading());
+            dispatch(asyncAuth({ email, password }));
         } else {
-            setErrorMessage("Все поля обязательны для заполнения", dispatch);
+            dispatch(setErrorMessage("Все поля обязательны для заполнения"));
         }
     };
 
@@ -81,7 +82,7 @@ export const AuthScreen = ({ navigation }) => {
     );
 
     const onDismissSnackBar = () => {
-        clearErrorMessage(dispatch);
+        dispatch(clearErrorMessage());
         setVisible(false);
     };
 
