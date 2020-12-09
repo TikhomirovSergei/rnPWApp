@@ -24,9 +24,10 @@ export const asyncGetProfile = createAsyncThunk(
 
 export const asyncCreateTransaction = createAsyncThunk(
     "transaction/asyncCreateTransaction",
-    async (fields: CreateTransactionFields, { rejectWithValue }) => {
+    async (fields: CreateTransactionFields, { dispatch, rejectWithValue }) => {
         try {
             const { token, name, amount } = fields;
+            dispatch(createTransactionLoading());
             return await TransactionsAPI.createTransaction(token, name, amount);
         } catch (err) {
             let error: AxiosError<ValidationErrors> = err;

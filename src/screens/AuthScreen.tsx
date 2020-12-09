@@ -6,7 +6,7 @@ import { AppButton } from "../components/ui/AppButton";
 import { AppButtonLoaderText } from "../components/ui/AppButtonLoaderText";
 import { AppSnackbar } from "../components/ui/AppSnackbar";
 
-import { asyncAuth, clearErrorMessage, setErrorMessage, startLoading } from "../redux/mainSlice";
+import { asyncAuth, clearErrorMessage, setErrorMessage } from "../redux/mainSlice";
 import { RootState } from "../redux/rootReducer";
 
 import { validateEmail } from "../utils/validateUtils";
@@ -60,7 +60,6 @@ export const AuthScreen = ({ navigation }) => {
                 return;
             }
 
-            dispatch(startLoading());
             dispatch(asyncAuth({ email, password }));
         } else {
             dispatch(setErrorMessage("Все поля обязательны для заполнения"));

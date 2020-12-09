@@ -14,7 +14,6 @@ import {
     asyncCreateTransaction,
     asyncGetProfile,
     clearUserErrorMessage,
-    createTransactionLoading,
     setUserErrorMessage,
 } from "../redux/userSlice";
 import { RootState } from "../redux/rootReducer";
@@ -81,7 +80,6 @@ export const MainScreen = ({ navigation }) => {
             return;
         }
 
-        dispatch(createTransactionLoading());
         dispatch(asyncCreateTransaction({ token, name: recipient, amount: parseInt(amount) }));
     };
 

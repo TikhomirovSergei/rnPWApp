@@ -10,19 +10,23 @@ export type ValidationErrors = {
     field_errors: Record<string, string>;
 };
 
-export const asyncAuth = createAsyncThunk("auth/asyncAuth", async (fields: AuthFields, { rejectWithValue }) => {
-    try {
-        const { email, password } = fields;
-        return await AuthAPI.login(email, password);
-    } catch (err) {
-        let error: AxiosError<ValidationErrors> = err;
-        if (!error.response) {
-            throw err;
-        }
+export const asyncAuth = createAsyncThunk(
+    "auth/asyncAuth",
+    async (fields: AuthFields, { dispatch, rejectWithValue }) => {
+        try {
+            const { email, password } = fields;
+            dispatch(startLoading());
+            return await AuthAPI.login(email, password);
+        } catch (err) {
+            let error: AxiosError<ValidationErrors> = err;
+            if (!error.response) {
+                throw err;
+            }
 
-        return rejectWithValue(error.response.data);
-    }
-});
+            return rejectWithValue(error.response.data);
+        }
+    },
+);
 
 export const asyncRegister = createAsyncThunk(
     "register/asyncRegister",
